@@ -186,3 +186,32 @@ exports.updateProgress = async (req, res) => {
       .json({ message: "Erreur lors de la mise à jour de la progression." });
   }
 };
+
+// Recherche et filtres dynamiques
+exports.filterBooks = async (req, res) => {
+  try {
+    const { title, author, category, status } = req.query;
+
+    // Construction du filtre de base (utilisateur connecté)
+    const filter = { user_id: req.user.userId };
+
+    // Ajout des filtres optionnels avec recherche insensible à la casse
+    if (title) {
+      filter.title = { $regex: title, $options: "i" };
+    }
+    if (author) {
+      filter.author = { $regex: author, $options: "i" };
+    }
+    if (category) {
+      filter.category = { $regex: category, $options: "i" };
+    }
+    if (status) {
+      filter.status = status;
+    }
+
+    const books = await Book.find(filter);
+    res.json(books);
+  } catch (err) {
+    res.status(500).json({ message: "Erreur lors de la recherche de livres." });
+  }
+};

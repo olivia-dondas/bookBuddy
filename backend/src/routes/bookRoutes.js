@@ -3,6 +3,9 @@ const router = express.Router();
 const bookController = require("../controllers/bookController");
 const auth = require("../middleware/authMiddleware");
 
+// Route de recherche/filtres (doit être avant /:id pour éviter les conflits)
+router.get("/filter", auth, bookController.filterBooks);
+
 // Toutes les routes ci-dessous nécessitent d'être connecté
 router.post("/", auth, bookController.addBook);
 router.get("/", auth, bookController.getBooks);

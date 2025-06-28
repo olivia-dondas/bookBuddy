@@ -17,3 +17,15 @@ exports.giveReward = async (req, res) => {
       .json({ message: "Erreur lors de l'attribution de la récompense." });
   }
 };
+
+// Lister toutes les récompenses de l'utilisateur
+exports.getRewards = async (req, res) => {
+  try {
+    const rewards = await Reward.find({ user_id: req.user.userId });
+    res.json(rewards);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des récompenses." });
+  }
+};
