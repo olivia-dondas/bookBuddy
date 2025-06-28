@@ -33,6 +33,9 @@ app.use("/books", bookRoutes);
 const rewardRoutes = require("./routes/rewardRoutes");
 app.use("/rewards", rewardRoutes);
 
+const userRoutes = require("./routes/userRoutes");
+app.use("/users", userRoutes);
+
 // Lancement du serveur
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
