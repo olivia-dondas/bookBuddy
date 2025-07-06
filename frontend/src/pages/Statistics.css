@@ -1,0 +1,247 @@
+/* Page Statistiques - Style inspiré du Mucem */
+.statistics-page {
+  padding: 0;
+}
+
+.stats-section {
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Statistiques par genre */
+.genre-stats {
+  background: var(--bg-card);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+}
+
+.genre-stat-item {
+  margin-bottom: 1.5rem;
+}
+
+.genre-stat-item:last-child {
+  margin-bottom: 0;
+}
+
+.genre-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.genre-name {
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 400;
+}
+
+.genre-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.genre-progress {
+  width: 100%;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.genre-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, var(--primary), var(--accent));
+  transition: width 0.3s ease;
+}
+
+/* Statistiques auteurs */
+.author-stats {
+  background: var(--bg-card);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+}
+
+.author-stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.author-stat-item:last-child {
+  border-bottom: none;
+}
+
+.author-name {
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 400;
+}
+
+.author-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Statistiques de notes */
+.rating-stats {
+  background: var(--bg-card);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+}
+
+.rating-overview {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+
+.average-rating,
+.total-ratings {
+  text-align: center;
+}
+
+.rating-value {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.rating-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rating-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rating-stars {
+  color: var(--accent);
+  font-size: 1rem;
+  min-width: 80px;
+}
+
+.rating-progress {
+  flex: 1;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rating-progress-bar {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.rating-count {
+  min-width: 30px;
+  text-align: right;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .genre-stats,
+  .author-stats,
+  .rating-stats {
+    padding: 1.5rem;
+  }
+
+  .genre-info,
+  .author-stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .rating-overview {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .genre-stats,
+  .author-stats,
+  .rating-stats {
+    padding: 1rem;
+  }
+
+  .rating-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .rating-progress {
+    width: 100%;
+  }
+}

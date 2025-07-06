@@ -1,0 +1,137 @@
+/* Page Favoris - Style inspiré du Mucem */
+.favorites-page {
+  padding: 0;
+}
+
+.favorites-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Statistiques des genres */
+.genre-stats {
+  background: var(--bg-card);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+  margin-bottom: 2rem;
+}
+
+.genre-stats h3 {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.genre-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.genre-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.genre-item:last-child {
+  border-bottom: none;
+}
+
+.genre-name {
+  font-size: 1rem;
+  color: var(--text-main);
+  font-weight: 400;
+}
+
+.genre-count {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+/* Section des favoris */
+.favorites-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .favorites-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .genre-stats {
+    padding: 1.5rem;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .genre-stats {
+    padding: 1rem;
+  }
+
+  .genre-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}

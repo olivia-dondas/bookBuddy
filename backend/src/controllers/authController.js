@@ -5,10 +5,24 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+
+    // Validation des champs requis
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Tous les champs sont requis." });
+    }
+
     // Vérifie si l'utilisateur existe déjà
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "Email déjà utilisé." });
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+    if (existingUser) {
+      if (existingUser.email === email) {
+        return res.status(400).json({ message: "Email déjà utilisé." });
+      }
+      if (existingUser.username === username) {
+        return res
+          .status(400)
+          .json({ message: "Nom d'utilisateur déjà utilisé." });
+      }
+    }
 
     // Hash du mot de passe
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -19,6 +33,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ message: "Utilisateur créé avec succès." });
   } catch (err) {
+    console.error("Erreur lors de l'inscription:", err);
     res.status(500).json({ message: "Erreur serveur." });
   }
 };
@@ -26,19 +41,27 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
+
+    // Validation des champs requis
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email et mot de passe requis." });
+    }
+
     // Recherche de l'utilisateur
     const user = await User.findOne({ email });
-    if (!user)
+    if (!user) {
       return res
         .status(400)
         .json({ message: "Email ou mot de passe incorrect." });
+    }
 
     // Vérification du mot de passe
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch)
+    if (!isMatch) {
       return res
         .status(400)
         .json({ message: "Email ou mot de passe incorrect." });
+    }
 
     // Génération du token JWT
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -47,9 +70,16 @@ exports.login = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user._id, username: user.username, email: user.email },
+      user: {
+        id: user._id,
+        name: user.username,
+        username: user.username,
+        email: user.email,
+        level: user.level || 1,
+      },
     });
   } catch (err) {
+    console.error("Erreur lors de la connexion:", err);
     res.status(500).json({ message: "Erreur serveur." });
   }
 };
