@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -8,6 +9,9 @@ const app = express();
 // Middlewares
 app.use(cors());
 app.use(express.json());
+
+// Servir les fichiers statiques (images uploadées)
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // Connexion à MongoDB
 mongoose
