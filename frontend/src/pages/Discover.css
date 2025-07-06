@@ -1,0 +1,265 @@
+/* Page Découvrir - Style inspiré du Mucem */
+.discover-page {
+  padding: 0;
+}
+
+.search-section {
+  background: var(--bg-card);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.75rem;
+  border: 1px solid var(--border-main);
+  border-radius: 2px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  background: var(--bg-main);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.genre-select {
+  padding: 0.75rem;
+  border: 1px solid var(--border-main);
+  border-radius: 2px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  background: var(--bg-main);
+  cursor: pointer;
+  min-width: 150px;
+}
+
+.genre-select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.search-button {
+  padding: 0.75rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  border: 1px solid var(--primary);
+  border-radius: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.search-button:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Genres populaires */
+.genres-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.genres-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.genre-tag {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--border-main);
+  background: var(--bg-card);
+  color: var(--text-main);
+  border-radius: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.genre-tag:hover {
+  background: var(--bg-secondary);
+}
+
+.genre-tag.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* Grille des livres */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.book-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.book-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.book-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.book-title {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--text-main);
+  margin: 0;
+  flex: 1;
+}
+
+.book-rating {
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-left: 1rem;
+}
+
+.book-author {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0 0 0.5rem 0;
+}
+
+.book-genre {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 1rem 0;
+}
+
+.book-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 1rem 0;
+}
+
+.book-meta {
+  margin-bottom: 1rem;
+}
+
+.book-pages {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.add-button {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--primary);
+  color: white;
+  border: 1px solid var(--primary);
+  border-radius: 2px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.add-button:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* Sections de résultats */
+.results-section,
+.default-recommendations {
+  margin-bottom: 2rem;
+}
+
+.no-results {
+  text-align: center;
+  padding: 3rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+}
+
+.no-results h3 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.no-results p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-input,
+  .genre-select {
+    min-width: auto;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .search-section {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-section {
+    padding: 1rem;
+  }
+
+  .book-card {
+    padding: 1rem;
+  }
+
+  .book-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .book-rating {
+    margin-left: 0;
+  }
+}
