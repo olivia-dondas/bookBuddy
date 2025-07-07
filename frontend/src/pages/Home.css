@@ -45,7 +45,7 @@
 
 .section-title {
   font-size: 1.5rem;
-  font-weight: 300;
+  font-weight: 600;
   color: var(--primary);
   margin-bottom: 1.5rem;
   text-transform: uppercase;
@@ -93,26 +93,30 @@
   background: var(--bg-card);
   padding: 1.5rem;
   border: 1px solid var(--border-light);
+  border-radius: 8px;
   text-align: center;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-soft);
 }
 
 .stat-card:hover {
   box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
 }
 
 .stat-value {
   font-size: 2rem;
-  font-weight: 300;
+  font-weight: 600;
   color: var(--primary);
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-weight: 500;
 }
 
 /* Responsive */

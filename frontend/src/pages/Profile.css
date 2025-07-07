@@ -1,20 +1,12 @@
-/* Page Profil - Style inspiré du Mucem */
-.profile-page {
-  padding: 0;
-}
+/* Page Profil - Style bento moderne */
 
-.profile-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
-  margin-bottom: 2rem;
-}
+/* Styles spécifiques au profil */
 
 .profile-header {
   display: flex;
   align-items: center;
   gap: 2rem;
-  padding: 2rem;
-  border-bottom: 1px solid var(--border-light);
+  padding: 0;
 }
 
 .profile-avatar {
@@ -79,7 +71,9 @@
 
 /* Formulaire d'édition */
 .profile-form {
-  padding: 2rem;
+  padding: 1.5rem 0 0 0;
+  border-top: 1px solid var(--border-light);
+  margin-top: 1.5rem;
 }
 
 .form-group {
@@ -155,7 +149,9 @@
 
 /* Détails du profil */
 .profile-details {
-  padding: 2rem;
+  padding: 1.5rem 0 0 0;
+  border-top: 1px solid var(--border-light);
+  margin-top: 1.5rem;
 }
 
 .detail-item {
@@ -183,23 +179,11 @@
 }
 
 /* Statistiques */
-.stats-section {
-  margin-bottom: 2rem;
-}
-
-.section-title {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: var(--primary);
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+  margin-top: 0;
 }
 
 .stat-card {
@@ -229,16 +213,6 @@
 }
 
 /* Objectif de lecture */
-.goal-section {
-  margin-bottom: 2rem;
-}
-
-.goal-card {
-  background: var(--bg-card);
-  padding: 2rem;
-  border: 1px solid var(--border-light);
-}
-
 .goal-progress {
   margin-bottom: 1rem;
 }
@@ -285,14 +259,11 @@
 }
 
 /* Badges */
-.badges-section {
-  margin-bottom: 2rem;
-}
-
 .badges-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1rem;
+  margin-top: 0;
 }
 
 .badge-card {
@@ -322,11 +293,6 @@
 }
 
 /* Actions */
-.actions-section {
-  text-align: center;
-  margin-top: 2rem;
-}
-
 .logout-button {
   padding: 0.75rem 2rem;
   background: var(--error);
@@ -376,14 +342,9 @@
 }
 
 @media (max-width: 480px) {
-  .profile-header {
-    padding: 1.5rem;
-  }
-
   .profile-form,
-  .profile-details,
-  .goal-card {
-    padding: 1.5rem;
+  .profile-details {
+    padding: 1rem 0 0 0;
   }
 
   .stats-grid {

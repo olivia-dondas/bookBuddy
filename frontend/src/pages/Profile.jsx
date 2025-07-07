@@ -150,16 +150,18 @@ const Profile = () => {
   }
 
   return (
-    <div className="profile-page">
-      <div className="page-header">
-        <h1 className="page-title">Mon profil</h1>
-        <p className="page-subtitle">
-          Gérez vos informations personnelles et suivez vos progrès
-        </p>
+    <div className="bento-container">
+      <div className="bento-card">
+        <div className="bento-header">
+          <h1 className="bento-title">Mon profil</h1>
+          <p className="bento-subtitle">
+            Gérez vos informations personnelles et suivez vos progrès
+          </p>
+        </div>
       </div>
 
       {/* Informations du profil */}
-      <div className="profile-section">
+      <div className="bento-card">
         <div className="profile-header">
           <div className="profile-avatar">
             <span className="avatar-initials">
@@ -270,8 +272,10 @@ const Profile = () => {
       </div>
 
       {/* Statistiques de lecture */}
-      <div className="stats-section">
-        <h2 className="section-title">Statistiques de lecture</h2>
+      <div className="bento-card">
+        <div className="bento-header">
+          <h2 className="bento-title">Statistiques de lecture</h2>
+        </div>
         <div className="stats-grid">
           <div className="stat-card">
             <div className="stat-value">{stats.totalBooks}</div>
@@ -293,39 +297,39 @@ const Profile = () => {
       </div>
 
       {/* Objectif de lecture */}
-      <div className="goal-section">
-        <h2 className="section-title">
-          Objectif de lecture {new Date().getFullYear()}
-        </h2>
-        <div className="goal-card">
-          <div className="goal-progress">
-            <div className="goal-info">
-              <span className="goal-text">
-                {stats.booksThisYear} / {stats.readingGoal} livres
-              </span>
-              <span className="goal-percentage">
-                {Math.round(stats.goalProgress)}%
-              </span>
-            </div>
-            <div className="progress-bar">
-              <div
-                className="progress-fill"
-                style={{ width: `${stats.goalProgress}%` }}
-              ></div>
-            </div>
-          </div>
-          {stats.goalProgress >= 100 && (
-            <p className="goal-achieved">
-              🎉 Objectif atteint ! Félicitations !
-            </p>
-          )}
+      <div className="bento-card">
+        <div className="bento-header">
+          <h2 className="bento-title">
+            Objectif de lecture {new Date().getFullYear()}
+          </h2>
         </div>
+        <div className="goal-progress">
+          <div className="goal-info">
+            <span className="goal-text">
+              {stats.booksThisYear} / {stats.readingGoal} livres
+            </span>
+            <span className="goal-percentage">
+              {Math.round(stats.goalProgress)}%
+            </span>
+          </div>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: `${stats.goalProgress}%` }}
+            ></div>
+          </div>
+        </div>
+        {stats.goalProgress >= 100 && (
+          <p className="goal-achieved">🎉 Objectif atteint ! Félicitations !</p>
+        )}
       </div>
 
       {/* Badges */}
       {badges.length > 0 && (
-        <div className="badges-section">
-          <h2 className="section-title">Badges obtenus</h2>
+        <div className="bento-card">
+          <div className="bento-header">
+            <h2 className="bento-title">Badges obtenus</h2>
+          </div>
           <div className="badges-grid">
             {badges.map((badge, index) => (
               <div key={index} className="badge-card">
@@ -338,10 +342,12 @@ const Profile = () => {
       )}
 
       {/* Actions */}
-      <div className="actions-section">
-        <button onClick={handleLogout} className="logout-button">
-          Se déconnecter
-        </button>
+      <div className="bento-card">
+        <div className="bento-actions">
+          <button onClick={handleLogout} className="logout-button">
+            Se déconnecter
+          </button>
+        </div>
       </div>
     </div>
   );

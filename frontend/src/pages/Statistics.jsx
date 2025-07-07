@@ -35,9 +35,9 @@ const Statistics = () => {
 
   // Statistiques générales
   const getGeneralStats = () => {
-    const readBooks = books.filter((book) => book.status === "lu");
-    const currentBooks = books.filter((book) => book.status === "en_cours");
-    const toReadBooks = books.filter((book) => book.status === "a_lire");
+    const readBooks = books.filter((book) => book.status === "terminé");
+    const currentBooks = books.filter((book) => book.status === "en cours");
+    const toReadBooks = books.filter((book) => book.status === "à lire");
     const totalPages = books.reduce((sum, book) => sum + (book.pages || 0), 0);
     const readPages = readBooks.reduce(
       (sum, book) => sum + (book.pages || 0),
@@ -62,13 +62,13 @@ const Statistics = () => {
   const getGenreStats = () => {
     const genres = {};
     books.forEach((book) => {
-      if (book.genre) {
-        if (!genres[book.genre]) {
-          genres[book.genre] = { total: 0, read: 0 };
+      if (book.category) {
+        if (!genres[book.category]) {
+          genres[book.category] = { total: 0, read: 0 };
         }
-        genres[book.genre].total += 1;
-        if (book.status === "lu") {
-          genres[book.genre].read += 1;
+        genres[book.category].total += 1;
+        if (book.status === "terminé") {
+          genres[book.category].read += 1;
         }
       }
     });
@@ -92,7 +92,7 @@ const Statistics = () => {
           authors[book.author] = { total: 0, read: 0 };
         }
         authors[book.author].total += 1;
-        if (book.status === "lu") {
+        if (book.status === "terminé") {
           authors[book.author].read += 1;
         }
       }
@@ -149,48 +149,46 @@ const Statistics = () => {
   }
 
   return (
-    <div className="statistics-page">
-      <div className="page-header">
-        <h1 className="page-title">Statistiques</h1>
-        <p className="page-subtitle">
+    <div className="bento-container">
+      {/* En-tête */}
+      <div className="bento-card bento-header">
+        <h1 className="bento-title">Statistiques</h1>
+        <p className="bento-subtitle">
           Analysez vos habitudes de lecture et découvrez vos tendances
         </p>
       </div>
 
       {/* Statistiques générales */}
-      <div className="stats-section">
-        <h2 className="section-title">Vue d'ensemble</h2>
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.totalBooks}</div>
-            <div className="stat-label">Livres total</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.readBooks}</div>
-            <div className="stat-label">Livres lus</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.currentBooks}</div>
-            <div className="stat-label">En cours</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.toReadBooks}</div>
-            <div className="stat-label">À lire</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.readPages}</div>
-            <div className="stat-label">Pages lues</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{generalStats.completionRate}%</div>
-            <div className="stat-label">Taux de lecture</div>
-          </div>
+      <div className="bento-grid">
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.totalBooks}</div>
+          <div className="stat-label">Livres total</div>
+        </div>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.readBooks}</div>
+          <div className="stat-label">Livres lus</div>
+        </div>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.currentBooks}</div>
+          <div className="stat-label">En cours</div>
+        </div>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.toReadBooks}</div>
+          <div className="stat-label">À lire</div>
+        </div>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.readPages}</div>
+          <div className="stat-label">Pages lues</div>
+        </div>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{generalStats.completionRate}%</div>
+          <div className="stat-label">Taux de lecture</div>
         </div>
       </div>
 
       {/* Statistiques par genre */}
       {genreStats.length > 0 && (
-        <div className="stats-section">
+        <div className="bento-card bento-wide">
           <h2 className="section-title">Répartition par genre</h2>
           <div className="genre-stats">
             {genreStats.map(({ genre, total, read, percentage }) => (
@@ -215,7 +213,7 @@ const Statistics = () => {
 
       {/* Top auteurs */}
       {authorStats.length > 0 && (
-        <div className="stats-section">
+        <div className="bento-card bento-wide">
           <h2 className="section-title">Auteurs les plus lus</h2>
           <div className="author-stats">
             {authorStats.map(({ author, total, read }) => (
@@ -233,7 +231,7 @@ const Statistics = () => {
 
       {/* Statistiques de notes */}
       {ratingStats && (
-        <div className="stats-section">
+        <div className="bento-card bento-wide">
           <h2 className="section-title">Notes attribuées</h2>
           <div className="rating-stats">
             <div className="rating-overview">
@@ -273,11 +271,11 @@ const Statistics = () => {
       )}
 
       {/* Message d'erreur */}
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="bento-card bento-error">{error}</div>}
 
       {/* État vide */}
       {books.length === 0 && !loading && !error && (
-        <div className="empty-state">
+        <div className="bento-card bento-empty">
           <h3>Aucune donnée disponible</h3>
           <p>
             Ajoutez des livres à votre bibliothèque pour voir vos statistiques.

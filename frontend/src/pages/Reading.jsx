@@ -81,77 +81,130 @@ const Reading = () => {
 
   return (
     <div className="reading-page">
-      <div className="page-header">
-        <h1 className="page-title">Lectures en cours</h1>
-        <p className="page-subtitle">
-          Suivez l'avancement de vos lectures actuelles
-        </p>
-      </div>
-
-      {/* Statistiques de progression */}
-      <div className="progress-stats">
-        <div className="stat-card">
-          <div className="stat-value">{books.length}</div>
-          <div className="stat-label">Livres en cours</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{getReadPages()}</div>
-          <div className="stat-label">Pages lues</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{getTotalPages()}</div>
-          <div className="stat-label">Pages totales</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-value">{getOverallProgress()}%</div>
-          <div className="stat-label">Progression globale</div>
-        </div>
-      </div>
-
-      {/* Barre de progression globale */}
-      {books.length > 0 && (
-        <div className="global-progress">
-          <h3>Progression globale</h3>
-          <div className="progress-bar">
-            <div
-              className="progress-fill"
-              style={{ width: `${getOverallProgress()}%` }}
-            ></div>
+      {/* Header avec style bento */}
+      <div className="bento-container">
+        <div className="bento-card bento-card-wide">
+          <div className="bento-header">
+            <div>
+              <h1 className="bento-title">Lectures en cours</h1>
+              <p className="bento-subtitle">
+                Suivez l'avancement de vos lectures actuelles
+              </p>
+            </div>
+            <span className="bento-icon">📚</span>
           </div>
-          <p className="progress-text">
-            {getReadPages()} / {getTotalPages()} pages ({getOverallProgress()}%)
-          </p>
+        </div>
+      </div>
+
+      {/* Statistiques en style bento */}
+      <div className="bento-container">
+        <div className="bento-grid-4">
+          <div className="bento-card">
+            <div className="bento-content">
+              <div className="bento-stat">{books.length}</div>
+              <div className="bento-label">Livres en cours</div>
+            </div>
+          </div>
+          <div className="bento-card bento-card-accent">
+            <div className="bento-content">
+              <div className="bento-stat">{getReadPages()}</div>
+              <div className="bento-label">Pages lues</div>
+            </div>
+          </div>
+          <div className="bento-card bento-card-secondary">
+            <div className="bento-content">
+              <div className="bento-stat">{getTotalPages()}</div>
+              <div className="bento-label">Pages totales</div>
+            </div>
+          </div>
+          <div className="bento-card bento-card-dark">
+            <div className="bento-content">
+              <div className="bento-stat" style={{ color: "var(--accent)" }}>
+                {getOverallProgress()}%
+              </div>
+              <div
+                className="bento-label"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Progression globale
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Barre de progression en style bento */}
+      {books.length > 0 && (
+        <div className="bento-container">
+          <div className="bento-card bento-card-wide bento-card-accent">
+            <div className="bento-header">
+              <h3 className="bento-title">Progression globale</h3>
+            </div>
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${getOverallProgress()}%` }}
+              ></div>
+            </div>
+            <p className="progress-text">
+              {getReadPages()} / {getTotalPages()} pages ({getOverallProgress()}
+              %)
+            </p>
+          </div>
         </div>
       )}
 
       {/* Message d'erreur */}
-      {error && <div className="error-message">{error}</div>}
+      {error && (
+        <div className="bento-container">
+          <div
+            className="bento-card"
+            style={{ borderColor: "var(--error)", background: "#fef2f2" }}
+          >
+            <div className="error-message">{error}</div>
+          </div>
+        </div>
+      )}
 
       {/* Liste des livres en cours */}
       {books.length === 0 && !loading && !error ? (
-        <div className="empty-state">
-          <h3>Aucune lecture en cours</h3>
-          <p>
-            Commencez la lecture d'un livre depuis votre bibliothèque pour le
-            voir apparaître ici.
-          </p>
-          <button onClick={() => navigate("/books")} className="primary-button">
-            Voir ma bibliothèque
-          </button>
+        <div className="bento-container">
+          <div className="bento-card bento-card-wide">
+            <div className="empty-state">
+              <h3>Aucune lecture en cours</h3>
+              <p>
+                Commencez la lecture d'un livre depuis votre bibliothèque pour
+                le voir apparaître ici.
+              </p>
+              <div className="bento-actions">
+                <button
+                  onClick={() => navigate("/books")}
+                  className="bento-button bento-button-accent"
+                >
+                  Voir ma bibliothèque
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="reading-section">
-          <h2 className="section-title">Vos lectures actuelles</h2>
-          <div className="books-grid">
-            {books.map((book) => (
-              <BookComponent
-                key={book._id}
-                book={book}
-                onDelete={handleBookDeleted}
-                onUpdate={handleBookUpdated}
-                showProgress={true}
-              />
-            ))}
+        <div className="bento-container">
+          <div className="bento-card bento-card-wide">
+            <div className="bento-header">
+              <h2 className="bento-title">Vos lectures actuelles</h2>
+              <span className="bento-icon">📖</span>
+            </div>
+            <div className="books-grid">
+              {books.map((book) => (
+                <BookComponent
+                  key={book._id}
+                  book={book}
+                  onDelete={handleBookDeleted}
+                  onUpdate={handleBookUpdated}
+                  showProgress={true}
+                />
+              ))}
+            </div>
           </div>
         </div>
       )}

@@ -73,40 +73,41 @@ const Home = () => {
   }
 
   return (
-    <div className="home-page">
-      <div className="page-header">
-        <h1 className="page-title">Bonjour {user?.name || "Utilisateur"}</h1>
-        <p className="page-subtitle">
+    <div className="bento-container">
+      {/* En-tête */}
+      <div className="bento-card bento-header">
+        <h1 className="bento-title">Bonjour {user?.name || "Utilisateur"}</h1>
+        <p className="bento-subtitle">
           Bienvenue dans votre bibliothèque personnelle
         </p>
       </div>
 
-      {/* Statistiques - Toujours affichées */}
-      <div className="stats-grid">
-        <div className="stat-card">
+      {/* Statistiques - Grille bento */}
+      <div className="bento-grid">
+        <div className="bento-card bento-stat">
           <div className="stat-value">{books.length}</div>
           <div className="stat-label">Livres dans votre bibliothèque</div>
         </div>
-        <div className="stat-card">
+        <div className="bento-card bento-stat">
           <div className="stat-value">
             {books.filter((book) => book.status === "terminé").length}
           </div>
           <div className="stat-label">Livres terminés</div>
         </div>
-        <div className="stat-card">
+        <div className="bento-card bento-stat">
           <div className="stat-value">
             {books.filter((book) => book.status === "en cours").length}
           </div>
           <div className="stat-label">Lectures en cours</div>
         </div>
-        <div className="stat-card">
+        <div className="bento-card bento-stat">
           <div className="stat-value">Niveau {user?.level || 1}</div>
           <div className="stat-label">Votre niveau</div>
         </div>
       </div>
 
-      {/* Actions - Toujours affichées */}
-      <div className="actions-bar">
+      {/* Actions */}
+      <div className="bento-card bento-actions">
         <button
           onClick={() => setShowAddForm(!showAddForm)}
           className="primary-button"
@@ -117,23 +118,21 @@ const Home = () => {
 
       {/* Formulaire d'ajout */}
       {showAddForm && (
-        <div className="add-book-section">
-          <div className="card">
-            <h3 className="card-title">Ajouter un nouveau livre</h3>
-            <AddBookForm
-              onBookAdded={handleBookAdded}
-              onCancel={() => setShowAddForm(false)}
-            />
-          </div>
+        <div className="bento-card bento-form">
+          <h3 className="card-title">Ajouter un nouveau livre</h3>
+          <AddBookForm
+            onBookAdded={handleBookAdded}
+            onCancel={() => setShowAddForm(false)}
+          />
         </div>
       )}
 
       {/* Message d'erreur */}
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="bento-card bento-error">{error}</div>}
 
       {/* Liste des livres */}
       {books.length === 0 && !loading && !error ? (
-        <div className="empty-state">
+        <div className="bento-card bento-empty">
           <h3>Votre bibliothèque est vide</h3>
           <p>
             Ajoutez votre premier livre pour commencer votre aventure littéraire
@@ -147,7 +146,7 @@ const Home = () => {
           </button>
         </div>
       ) : (
-        <div className="books-section">
+        <div className="bento-card bento-wide">
           <h2 className="section-title">Vos livres</h2>
           <div className="books-grid">
             {books.map((book) => (

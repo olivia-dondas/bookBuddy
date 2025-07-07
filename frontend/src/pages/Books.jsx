@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import BookComponent from "../components/BookComponent";
 import AddBookForm from "../components/AddBookForm";
+import BookEditModal from "../components/BookEditModal";
 import { booksAPI } from "../utils/api";
 import "./Books.css";
 
@@ -10,6 +11,8 @@ const Books = () => {
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -84,6 +87,40 @@ const Books = () => {
     );
   };
 
+  const handleEditBook = (book) => {
+    setSelectedBook(book);
+    setShowEditModal(true);
+  };
+
+  const handleToggleFavorite = async (bookId) => {
+    try {
+      const response = await booksAPI.toggleFavorite(bookId);
+      const updatedBook = response.data.book;
+      setBooks(books.map((book) => (book._id === bookId ? updatedBook : book)));
+
+      // Notification
+      const notification = document.createElement("div");
+      notification.className = "success-notification";
+      notification.textContent = response.data.message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--success);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: var(--shadow-hover);
+        z-index: 9999;
+        animation: slideIn 0.3s ease-out;
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des favoris:", error);
+    }
+  };
+
   const getUniqueGenres = () => {
     const genres = books.map((book) => book.category).filter(Boolean);
     return [...new Set(genres)];
@@ -103,16 +140,17 @@ const Books = () => {
   }
 
   return (
-    <div className="books-page">
-      <div className="page-header">
-        <h1 className="page-title">Ma bibliothèque</h1>
-        <p className="page-subtitle">
+    <div className="bento-container">
+      {/* En-tête */}
+      <div className="bento-card bento-header">
+        <h1 className="bento-title">Ma bibliothèque</h1>
+        <p className="bento-subtitle">
           Gérez et organisez votre collection de livres
         </p>
       </div>
 
       {/* Barre de recherche et filtres */}
-      <div className="filters-section">
+      <div className="bento-card bento-filters">
         <div className="search-bar">
           <input
             type="text"
@@ -158,42 +196,40 @@ const Books = () => {
       </div>
 
       {/* Statistiques de la bibliothèque */}
-      <div className="library-stats">
-        <div className="stat-item">
-          <span className="stat-number">{filteredBooks.length}</span>
-          <span className="stat-label">Livres affichés</span>
+      <div className="bento-grid">
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{filteredBooks.length}</div>
+          <div className="stat-label">Livres affichés</div>
         </div>
-        <div className="stat-item">
-          <span className="stat-number">{books.length}</span>
-          <span className="stat-label">Total livres</span>
+        <div className="bento-card bento-stat">
+          <div className="stat-value">{books.length}</div>
+          <div className="stat-label">Total livres</div>
         </div>
-        <div className="stat-item">
-          <span className="stat-number">
+        <div className="bento-card bento-stat">
+          <div className="stat-value">
             {books.filter((book) => book.status === "terminé").length}
-          </span>
-          <span className="stat-label">Livres lus</span>
+          </div>
+          <div className="stat-label">Livres lus</div>
         </div>
       </div>
 
       {/* Formulaire d'ajout */}
       {showAddForm && (
-        <div className="add-book-section">
-          <div className="card">
-            <h3 className="card-title">Ajouter un nouveau livre</h3>
-            <AddBookForm
-              onBookAdded={handleBookAdded}
-              onCancel={() => setShowAddForm(false)}
-            />
-          </div>
+        <div className="bento-card bento-form">
+          <h3 className="card-title">Ajouter un nouveau livre</h3>
+          <AddBookForm
+            onBookAdded={handleBookAdded}
+            onCancel={() => setShowAddForm(false)}
+          />
         </div>
       )}
 
       {/* Message d'erreur */}
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="bento-card bento-error">{error}</div>}
 
       {/* Liste des livres */}
       {filteredBooks.length === 0 && !loading && !error ? (
-        <div className="empty-state">
+        <div className="bento-card bento-empty">
           <h3>Aucun livre trouvé</h3>
           <p>
             {searchTerm || statusFilter !== "all" || genreFilter !== "all"
@@ -202,16 +238,33 @@ const Books = () => {
           </p>
         </div>
       ) : (
-        <div className="books-grid">
-          {filteredBooks.map((book) => (
-            <BookComponent
-              key={book._id}
-              book={book}
-              onDelete={handleBookDeleted}
-              onUpdate={handleBookUpdated}
-            />
-          ))}
+        <div className="bento-card bento-wide">
+          <div className="books-grid">
+            {filteredBooks.map((book) => (
+              <BookComponent
+                key={book._id}
+                book={book}
+                onDelete={handleBookDeleted}
+                onUpdate={handleBookUpdated}
+                onEdit={() => {
+                  setSelectedBook(book);
+                  setShowEditModal(true);
+                }}
+                onToggleFavorite={handleToggleFavorite}
+              />
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Modal d'édition de livre */}
+      {showEditModal && selectedBook && (
+        <BookEditModal
+          book={selectedBook}
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleBookUpdated}
+        />
       )}
     </div>
   );

@@ -39,8 +39,14 @@ export const booksAPI = {
   delete: (id) => api.delete(`/books/${id}`),
   updateProgress: (id, progressData) =>
     api.put(`/books/${id}/progress`, progressData),
-  addFavorite: (id) => api.post(`/books/${id}/favorite`),
-  removeFavorite: (id) => api.delete(`/books/${id}/favorite`),
+
+  // Nouvelles fonctionnalités
+  toggleFavorite: (id) => api.put(`/books/${id}/favorite`),
+  addRating: (id, ratingData) => api.put(`/books/${id}/rating`, ratingData),
+  addNotes: (id, notesData) => api.put(`/books/${id}/notes`, notesData),
+  getFavorites: () => api.get("/books/favorites"),
+  addToFavorites: (bookData) => api.post("/books/favorites", bookData),
+
   filter: (params) => api.get("/books/filter", { params }),
 };
 
@@ -48,6 +54,14 @@ export const booksAPI = {
 export const rewardsAPI = {
   getAll: () => api.get("/rewards"),
   give: (type, rewardData) => api.post(`/rewards/${type}`, rewardData),
+};
+
+// Fonctions API pour les recommandations
+export const recommendationsAPI = {
+  getAll: (params = {}) => api.get("/recommendations", { params }),
+  getGenres: () => api.get("/recommendations/genres"),
+  getById: (id) => api.get(`/recommendations/${id}`),
+  create: (bookData) => api.post("/recommendations", bookData),
 };
 
 // Fonctions API pour les utilisateurs
