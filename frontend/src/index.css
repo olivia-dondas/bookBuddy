@@ -1,11 +1,69 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Palette moderne inspirée du Mucem - Design contemporain */
+  --primary: #1a1a1a; /* Noir moderne */
+  --primary-light: #333333; /* Gris anthracite */
+  --primary-dark: #000000; /* Noir profond */
+  --secondary: #666666; /* Gris moyen */
+  --accent: #ff6b35; /* Orange Mucem - couleur signature */
+  --accent-light: #ff8a65; /* Orange clair */
+  --accent-dark: #e64a19; /* Orange foncé */
+
+  /* Couleurs neutres modernes */
+  --neutral-50: #fafafa; /* Gris très clair */
+  --neutral-100: #f5f5f5; /* Gris clair */
+  --neutral-200: #eeeeee; /* Gris */
+  --neutral-800: #424242; /* Gris foncé */
+  --neutral-900: #212121; /* Gris très foncé */
+
+  /* Couleurs de fond modernes - plus doux pour les yeux */
+  --bg-main: #fafafa; /* Gris très clair - moins agressif que le blanc */
+  --bg-card: #ffffff; /* Blanc pur pour les cartes */
+  --bg-secondary: #f5f5f5; /* Gris clair */
+  --bg-dark: #1a1a1a; /* Fond sombre pour contraste */
+
+  /* Couleurs de texte équilibrées */
+  --text-main: #212121; /* Gris très foncé - meilleur pour les yeux */
+  --text-secondary: #666666; /* Gris moyen */
+  --text-muted: #999999; /* Gris clair */
+  --text-white: #ffffff; /* Blanc pour fonds sombres */
+
+  /* Bordures minimalistes */
+  --border-light: #eeeeee; /* Gris très clair */
+  --border-main: #e0e0e0; /* Gris clair */
+  --border-dark: #333333; /* Gris foncé */
+
+  /* Ombres subtiles et modernes */
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.18);
+
+  /* Variables pour le style Bento */
+  --bento-gap: 16px;
+  --bento-radius: 12px;
+  --bento-padding: 24px;
+
+  /* Couleurs pour délimiter les sections Bento */
+  --bento-bg-primary: #ffffff;
+  --bento-bg-secondary: #f8f9fa;
+  --bento-bg-accent: #fff5f0;
+  --bento-bg-dark: #1a1a1a;
+  --bento-border: rgba(0, 0, 0, 0.08);
+  --bento-border-hover: rgba(255, 107, 53, 0.2);
+
+  /* États avec couleurs Mucem */
+  --success: #4caf50; /* Vert moderne */
+  --warning: #ff9800; /* Orange */
+  --error: #f44336; /* Rouge */
+  --info: #2196f3; /* Bleu moderne */
+
+  color-scheme: light;
+  color: var(--text-main);
+  background-color: var(--bg-main);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,56 +71,470 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  padding: 0;
+  background-color: var(--bg-main);
+  color: var(--text-main);
   min-height: 100vh;
+  font-family: inherit;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+#root {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+a {
+  font-weight: 500;
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-dark);
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
+  border-radius: 2px;
+  border: 1px solid var(--primary);
+  padding: 0.75em 1.5em;
+  font-size: 0.9em;
+  font-weight: 400;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background: var(--primary);
+  color: white;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+button:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+button:active {
+  transform: none;
+}
+
+/* Bouton principal - Style Mucem moderne et épuré */
+.primary-button {
+  background: var(--primary);
+  color: var(--text-white);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: inherit;
+}
+
+.primary-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+}
+
+.primary-button:active {
+  transform: translateY(0);
+}
+
+.primary-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(44, 44, 44, 0.2);
+}
+
+/* État vide - utilisé dans toute l'application */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  margin-top: 2rem;
+}
+
+.empty-state h3 {
+  color: var(--text-main);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+.empty-state p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.empty-state .primary-button {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: var(--warm-neutral);
+  border: 2px solid var(--accent);
+  padding: 1.25rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  margin-top: 1rem;
+  box-shadow: var(--shadow-accent);
+  font-family: var(--font-family-primary);
+}
+
+.empty-state .primary-button:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Messages de chargement et d'erreur */
+.loading-container {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-main);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-light);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  a:hover {
-    color: #747bff;
+  100% {
+    transform: rotate(360deg);
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+.error-message {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: var(--error);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: var(--success);
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+/* Styles pour les inputs */
+input,
+textarea,
+select {
+  border-radius: 8px;
+  border: 2px solid var(--border-light);
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  transition: all 0.3s ease;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.1);
+}
+
+/* Styles pour les formulaires */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-input {
+  width: 100%;
+}
+
+.form-error {
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Utilitaires */
+.text-center {
+  text-align: center;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+.mb-2 {
+  margin-bottom: 1rem;
+}
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+.mb-4 {
+  margin-bottom: 2rem;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+.mt-2 {
+  margin-top: 1rem;
+}
+.mt-3 {
+  margin-top: 1.5rem;
+}
+.mt-4 {
+  margin-top: 2rem;
+}
+
+/* ===== SYSTÈME BENTO ===== */
+
+/* Container principal bento */
+.bento-container {
+  display: grid;
+  gap: var(--bento-gap);
+  padding: var(--bento-gap);
+}
+
+/* Grille bento responsive */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--bento-gap);
+}
+
+.bento-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--bento-gap);
+}
+
+.bento-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--bento-gap);
+}
+
+.bento-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--bento-gap);
+}
+
+/* Cartes bento de base */
+.bento-card {
+  background: var(--bento-bg-primary);
+  border: 1px solid var(--bento-border);
+  border-radius: var(--bento-radius);
+  padding: var(--bento-padding);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  border-color: var(--bento-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Variantes de cartes bento */
+.bento-card-secondary {
+  background: var(--bento-bg-secondary);
+}
+
+.bento-card-accent {
+  background: var(--bento-bg-accent);
+  border-color: rgba(255, 107, 53, 0.1);
+}
+
+.bento-card-dark {
+  background: var(--bento-bg-dark);
+  color: var(--text-white);
+  border-color: var(--border-dark);
+}
+
+.bento-card-dark:hover {
+  border-color: var(--accent);
+}
+
+/* Tailles spéciales pour les cartes bento */
+.bento-card-wide {
+  grid-column: span 2;
+}
+
+.bento-card-tall {
+  grid-row: span 2;
+}
+
+.bento-card-large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Headers de cartes bento */
+.bento-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.bento-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.bento-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0 0;
+  font-weight: 400;
+}
+
+.bento-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Contenu des cartes bento */
+.bento-content {
+  color: var(--text-main);
+}
+
+.bento-stat {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.bento-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Actions dans les cartes bento */
+.bento-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bento-button {
+  background: var(--primary);
+  color: var(--text-white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.bento-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.bento-button-accent {
+  background: var(--accent);
+}
+
+.bento-button-accent:hover {
+  background: var(--accent-dark);
+}
+
+.bento-button-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--border-main);
+}
+
+.bento-button-outline:hover {
+  background: var(--primary);
+  color: var(--text-white);
+  border-color: var(--primary);
+}
+
+/* Responsive pour le système bento */
+@media (max-width: 768px) {
+  .bento-grid-2,
+  .bento-grid-3,
+  .bento-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-card-wide,
+  .bento-card-large {
+    grid-column: span 1;
+  }
+
+  .bento-card-tall,
+  .bento-card-large {
+    grid-row: span 1;
+  }
+
+  .bento-container {
+    padding: var(--bento-gap) 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bento-container {
+    gap: 12px;
+    padding: 12px 0.5rem;
+  }
+
+  .bento-card {
+    padding: 1rem;
   }
 }

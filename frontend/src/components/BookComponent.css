@@ -1,0 +1,214 @@
+/* Composant Book modernisé */
+.book-component {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-light);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-component:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.book-cover-container {
+  position: relative;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.book-cover {
+  width: 100%;
+  max-width: 150px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.book-cover.no-cover {
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.book-info {
+  flex-grow: 1;
+  margin-bottom: 1rem;
+}
+
+.book-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+
+.book-author {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+.book-category {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.book-pages {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.book-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.rating-stars {
+  color: var(--warning);
+  font-size: 1.1rem;
+}
+
+.rating-text {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.book-comment {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+}
+
+.book-notes {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.book-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.book-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.book-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.book-status.a-lire,
+.book-status.à-lire {
+  background: rgba(255, 152, 0, 0.1);
+  color: var(--warning);
+}
+
+.book-status.en_cours,
+.book-status.en-cours {
+  background: rgba(33, 150, 243, 0.1);
+  color: var(--info);
+}
+
+.book-status.lu,
+.book-status.terminé {
+  background: rgba(76, 175, 80, 0.1);
+  color: var(--success);
+}
+
+.book-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.book-actions button {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-main);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.book-actions button:hover {
+  background: var(--primary-light);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.book-actions button.delete {
+  background: rgba(244, 67, 54, 0.1);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.book-actions button.delete:hover {
+  background: var(--error);
+  color: white;
+}
+
+.book-actions button.primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.book-actions button.primary:hover {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .book-cover {
+    max-width: 120px;
+    height: 160px;
+  }
+
+  .book-title {
+    font-size: 1.1rem;
+  }
+
+  .book-component {
+    padding: 1rem;
+  }
+}

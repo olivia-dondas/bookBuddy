@@ -1,0 +1,149 @@
+/* Page Home styles inspirés du Mucem */
+.home-page {
+  padding: 0;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.loading-container p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-top: 1rem;
+  font-weight: 300;
+}
+
+/* Actions bar */
+.actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+/* Section ajout de livre */
+.add-book-section {
+  margin-bottom: 2rem;
+}
+
+.add-book-section .card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Section livres */
+.books-section {
+  margin-top: 2rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Page header styles */
+.page-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.page-title {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--primary);
+  margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.page-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Stats grid styles */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  padding: 1.5rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.stat-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .actions-bar {
+    justify-content: center;
+  }
+
+  .books-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title {
+    font-size: 1.8rem;
+  }
+}
