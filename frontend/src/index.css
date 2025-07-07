@@ -1,41 +1,65 @@
 :root {
-  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
   line-height: 1.6;
   font-weight: 400;
 
-  /* Palette inspirée du Mucem - sobre et professionnelle */
-  --primary: #2c2c2c; /* Gris anthracite */
-  --primary-light: #4a4a4a; /* Gris moyen */
-  --primary-dark: #1a1a1a; /* Noir profond */
-  --secondary: #8a8a8a; /* Gris clair */
-  --accent: #d4af37; /* Or discret */
-  --accent-light: #f5f5f5; /* Gris très clair */
+  /* Palette moderne inspirée du Mucem - Design contemporain */
+  --primary: #1a1a1a; /* Noir moderne */
+  --primary-light: #333333; /* Gris anthracite */
+  --primary-dark: #000000; /* Noir profond */
+  --secondary: #666666; /* Gris moyen */
+  --accent: #ff6b35; /* Orange Mucem - couleur signature */
+  --accent-light: #ff8a65; /* Orange clair */
+  --accent-dark: #e64a19; /* Orange foncé */
 
-  /* Couleurs de fond */
-  --bg-main: #fafafa; /* Blanc cassé très léger */
-  --bg-card: #ffffff; /* Blanc pur */
-  --bg-secondary: #f8f8f8; /* Gris très clair */
+  /* Couleurs neutres modernes */
+  --neutral-50: #fafafa; /* Gris très clair */
+  --neutral-100: #f5f5f5; /* Gris clair */
+  --neutral-200: #eeeeee; /* Gris */
+  --neutral-800: #424242; /* Gris foncé */
+  --neutral-900: #212121; /* Gris très foncé */
 
-  /* Couleurs de texte */
-  --text-main: #2c2c2c; /* Gris anthracite */
+  /* Couleurs de fond modernes - plus doux pour les yeux */
+  --bg-main: #fafafa; /* Gris très clair - moins agressif que le blanc */
+  --bg-card: #ffffff; /* Blanc pur pour les cartes */
+  --bg-secondary: #f5f5f5; /* Gris clair */
+  --bg-dark: #1a1a1a; /* Fond sombre pour contraste */
+
+  /* Couleurs de texte équilibrées */
+  --text-main: #212121; /* Gris très foncé - meilleur pour les yeux */
   --text-secondary: #666666; /* Gris moyen */
   --text-muted: #999999; /* Gris clair */
+  --text-white: #ffffff; /* Blanc pour fonds sombres */
 
-  /* Bordures */
-  --border-light: #e0e0e0; /* Gris très clair */
-  --border-main: #cccccc; /* Gris moyen */
+  /* Bordures minimalistes */
+  --border-light: #eeeeee; /* Gris très clair */
+  --border-main: #e0e0e0; /* Gris clair */
+  --border-dark: #333333; /* Gris foncé */
 
-  /* Ombres subtiles */
-  --shadow-soft: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-hover: 0 4px 8px rgba(0, 0, 0, 0.15);
-  --shadow-strong: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Ombres subtiles et modernes */
+  --shadow-soft: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+  --shadow-strong: 0 8px 24px rgba(0, 0, 0, 0.18);
 
-  /* États */
-  --success: #4caf50;
-  --warning: #ff9800;
-  --error: #f44336;
-  --info: #2196f3;
+  /* Variables pour le style Bento */
+  --bento-gap: 16px;
+  --bento-radius: 12px;
+  --bento-padding: 24px;
+
+  /* Couleurs pour délimiter les sections Bento */
+  --bento-bg-primary: #ffffff;
+  --bento-bg-secondary: #f8f9fa;
+  --bento-bg-accent: #fff5f0;
+  --bento-bg-dark: #1a1a1a;
+  --bento-border: rgba(0, 0, 0, 0.08);
+  --bento-border-hover: rgba(255, 107, 53, 0.2);
+
+  /* États avec couleurs Mucem */
+  --success: #4caf50; /* Vert moderne */
+  --warning: #ff9800; /* Orange */
+  --error: #f44336; /* Rouge */
+  --info: #2196f3; /* Bleu moderne */
 
   color-scheme: light;
   color: var(--text-main);
@@ -100,24 +124,30 @@ button:active {
   transform: none;
 }
 
-/* Bouton principal - utilisé dans toute l'application */
+/* Bouton principal - Style Mucem moderne et épuré */
 .primary-button {
   background: var(--primary);
-  color: white;
-  border: 1px solid var(--primary);
-  padding: 0.75rem 1.5rem;
-  border-radius: 2px;
-  font-size: 0.9rem;
-  font-weight: 400;
+  color: var(--text-white);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  font-family: inherit;
 }
 
 .primary-button:hover {
-  background: var(--primary-dark);
-  border-color: var(--primary-dark);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover);
+}
+
+.primary-button:active {
+  transform: translateY(0);
 }
 
 .primary-button:focus {
@@ -149,16 +179,18 @@ button:active {
 }
 
 .empty-state .primary-button {
-  background: var(--primary);
-  color: white;
-  border: 1px solid var(--primary);
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: var(--warm-neutral);
+  border: 2px solid var(--accent);
+  padding: 1.25rem 2.5rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   margin-top: 1rem;
+  box-shadow: var(--shadow-accent);
+  font-family: var(--font-family-primary);
 }
 
 .empty-state .primary-button:hover {
@@ -287,4 +319,222 @@ select:focus {
 }
 .mt-4 {
   margin-top: 2rem;
+}
+
+/* ===== SYSTÈME BENTO ===== */
+
+/* Container principal bento */
+.bento-container {
+  display: grid;
+  gap: var(--bento-gap);
+  padding: var(--bento-gap);
+}
+
+/* Grille bento responsive */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--bento-gap);
+}
+
+.bento-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--bento-gap);
+}
+
+.bento-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--bento-gap);
+}
+
+.bento-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--bento-gap);
+}
+
+/* Cartes bento de base */
+.bento-card {
+  background: var(--bento-bg-primary);
+  border: 1px solid var(--bento-border);
+  border-radius: var(--bento-radius);
+  padding: var(--bento-padding);
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  border-color: var(--bento-border-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Variantes de cartes bento */
+.bento-card-secondary {
+  background: var(--bento-bg-secondary);
+}
+
+.bento-card-accent {
+  background: var(--bento-bg-accent);
+  border-color: rgba(255, 107, 53, 0.1);
+}
+
+.bento-card-dark {
+  background: var(--bento-bg-dark);
+  color: var(--text-white);
+  border-color: var(--border-dark);
+}
+
+.bento-card-dark:hover {
+  border-color: var(--accent);
+}
+
+/* Tailles spéciales pour les cartes bento */
+.bento-card-wide {
+  grid-column: span 2;
+}
+
+.bento-card-tall {
+  grid-row: span 2;
+}
+
+.bento-card-large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Headers de cartes bento */
+.bento-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.bento-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.bento-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0.25rem 0 0 0;
+  font-weight: 400;
+}
+
+.bento-icon {
+  width: 20px;
+  height: 20px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* Contenu des cartes bento */
+.bento-content {
+  color: var(--text-main);
+}
+
+.bento-stat {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.bento-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+/* Actions dans les cartes bento */
+.bento-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bento-button {
+  background: var(--primary);
+  color: var(--text-white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.bento-button:hover {
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.bento-button-accent {
+  background: var(--accent);
+}
+
+.bento-button-accent:hover {
+  background: var(--accent-dark);
+}
+
+.bento-button-outline {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--border-main);
+}
+
+.bento-button-outline:hover {
+  background: var(--primary);
+  color: var(--text-white);
+  border-color: var(--primary);
+}
+
+/* Responsive pour le système bento */
+@media (max-width: 768px) {
+  .bento-grid-2,
+  .bento-grid-3,
+  .bento-grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .bento-card-wide,
+  .bento-card-large {
+    grid-column: span 1;
+  }
+
+  .bento-card-tall,
+  .bento-card-large {
+    grid-row: span 1;
+  }
+
+  .bento-container {
+    padding: var(--bento-gap) 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .bento-container {
+    gap: 12px;
+    padding: 12px 0.5rem;
+  }
+
+  .bento-card {
+    padding: 1rem;
+  }
 }

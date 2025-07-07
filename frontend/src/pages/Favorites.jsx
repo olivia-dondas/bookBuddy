@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import BookComponent from "../components/BookComponent";
+import BookEditModal from "../components/BookEditModal";
 import { booksAPI } from "../utils/api";
 import "./Favorites.css";
 
@@ -9,6 +10,8 @@ const Favorites = () => {
   const [favoriteBooks, setFavoriteBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -24,13 +27,8 @@ const Favorites = () => {
   const fetchFavoriteBooks = async () => {
     try {
       setLoading(true);
-      const response = await booksAPI.getAll();
-      // Pour l'instant, on considère les livres avec une note >= 4 comme favoris
-      // Plus tard, on pourra ajouter un système de favoris explicite
-      const favorites = response.data.filter(
-        (book) => book.rating >= 4 || book.isFavorite
-      );
-      setFavoriteBooks(favorites);
+      const response = await booksAPI.getFavorites();
+      setFavoriteBooks(response.data);
     } catch (err) {
       console.error("Erreur lors du chargement des favoris:", err);
       setError("Impossible de charger vos livres favoris.");
@@ -49,6 +47,23 @@ const Favorites = () => {
 
   const handleBookDeleted = (bookId) => {
     setFavoriteBooks(favoriteBooks.filter((book) => book._id !== bookId));
+  };
+
+  const handleEditBook = (book) => {
+    setSelectedBook(book);
+    setShowEditModal(true);
+  };
+
+  const handleToggleFavorite = async (bookId) => {
+    try {
+      const response = await booksAPI.toggleFavorite(bookId);
+      // Si le livre n'est plus favori, on le retire de la liste
+      if (!response.data.book.is_favorite) {
+        setFavoriteBooks(favoriteBooks.filter((book) => book._id !== bookId));
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des favoris:", error);
+    }
   };
 
   const getGenreStats = () => {
@@ -88,25 +103,26 @@ const Favorites = () => {
   }
 
   return (
-    <div className="favorites-page">
-      <div className="page-header">
-        <h1 className="page-title">Mes favoris</h1>
-        <p className="page-subtitle">
+    <div className="bento-container">
+      {/* En-tête */}
+      <div className="bento-card bento-header">
+        <h1 className="bento-title">Mes favoris</h1>
+        <p className="bento-subtitle">
           Découvrez vos livres les mieux notés et vos coups de cœur
         </p>
       </div>
 
       {/* Statistiques des favoris */}
-      <div className="favorites-stats">
-        <div className="stat-card">
+      <div className="bento-grid">
+        <div className="bento-card bento-stat">
           <div className="stat-value">{favoriteBooks.length}</div>
           <div className="stat-label">Livres favoris</div>
         </div>
-        <div className="stat-card">
+        <div className="bento-card bento-stat">
           <div className="stat-value">{getReadBooks().length}</div>
           <div className="stat-label">Favoris lus</div>
         </div>
-        <div className="stat-card">
+        <div className="bento-card bento-stat">
           <div className="stat-value">{getAverageRating()}</div>
           <div className="stat-label">Note moyenne</div>
         </div>
@@ -114,7 +130,7 @@ const Favorites = () => {
 
       {/* Genres préférés */}
       {getGenreStats().length > 0 && (
-        <div className="genre-stats">
+        <div className="bento-card bento-wide">
           <h3>Vos genres préférés</h3>
           <div className="genre-list">
             {getGenreStats()
@@ -132,11 +148,11 @@ const Favorites = () => {
       )}
 
       {/* Message d'erreur */}
-      {error && <div className="error-message">{error}</div>}
+      {error && <div className="bento-card bento-error">{error}</div>}
 
       {/* Liste des livres favoris */}
       {favoriteBooks.length === 0 && !loading && !error ? (
-        <div className="empty-state">
+        <div className="bento-card bento-empty">
           <h3>Aucun livre favori</h3>
           <p>
             Ajoutez des notes élevées à vos livres pour les voir apparaître dans
@@ -147,7 +163,7 @@ const Favorites = () => {
           </button>
         </div>
       ) : (
-        <div className="favorites-section">
+        <div className="bento-card bento-wide">
           <h2 className="section-title">Vos livres favoris</h2>
           <div className="books-grid">
             {favoriteBooks.map((book) => (
@@ -156,11 +172,23 @@ const Favorites = () => {
                 book={book}
                 onDelete={handleBookDeleted}
                 onUpdate={handleBookUpdated}
+                onEdit={handleEditBook}
+                onToggleFavorite={handleToggleFavorite}
                 showRating={true}
               />
             ))}
           </div>
         </div>
+      )}
+
+      {/* Modal d'édition de livre */}
+      {showEditModal && selectedBook && (
+        <BookEditModal
+          book={selectedBook}
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          onSave={handleBookUpdated}
+        />
       )}
     </div>
   );

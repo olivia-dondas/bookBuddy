@@ -20,6 +20,16 @@ const bookSchema = new mongoose.Schema(
     pages: { type: Number },
     category: { type: String },
     last_page: { type: Number, default: 0 },
+
+    // Nouvelles fonctionnalités
+    is_favorite: { type: Boolean, default: false },
+    rating: { type: Number, min: 1, max: 5 },
+    comment: { type: String },
+    notes: { type: String },
+
+    // Dates importantes
+    date_started: { type: Date },
+    date_finished: { type: Date },
   },
   {
     // Ajoute automatiquement les champs createdAt et updatedAt

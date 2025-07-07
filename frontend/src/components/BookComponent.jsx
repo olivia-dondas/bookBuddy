@@ -2,7 +2,15 @@ import React, { useState } from "react";
 import { booksAPI } from "../utils/api";
 import "./BookComponent.css";
 
-const BookComponent = ({ book, onDelete, onUpdate }) => {
+const BookComponent = ({
+  book,
+  onDelete,
+  onUpdate,
+  onEdit,
+  onToggleFavorite,
+  showProgress = false,
+  showRating = false,
+}) => {
   const [loading, setLoading] = useState(false);
 
   // Fonction pour déterminer l'URL de la couverture
@@ -119,26 +127,23 @@ const BookComponent = ({ book, onDelete, onUpdate }) => {
         <h3 className="book-title">{book.title}</h3>
         <p className="book-author">par {book.author}</p>
 
-        <div className="book-meta">
-          {book.category && (
-            <div className="book-meta-item">
-              <span>🏷️</span>
-              <span>{book.category}</span>
-            </div>
-          )}
-          {book.pages && (
-            <div className="book-meta-item">
-              <span>📄</span>
-              <span>{book.pages} pages</span>
-            </div>
-          )}
-          {book.year && (
-            <div className="book-meta-item">
-              <span>📅</span>
-              <span>{book.year}</span>
-            </div>
-          )}
-        </div>
+        {book.category && <p className="book-category">{book.category}</p>}
+
+        {book.pages && <p className="book-pages">{book.pages} pages</p>}
+
+        {book.rating && (
+          <div className="book-rating">
+            <span className="rating-stars">
+              {"★".repeat(book.rating)}
+              {"☆".repeat(5 - book.rating)}
+            </span>
+            <span className="rating-text">({book.rating}/5)</span>
+          </div>
+        )}
+
+        {book.comment && <p className="book-comment">💬 {book.comment}</p>}
+
+        {book.notes && <p className="book-notes">📝 {book.notes}</p>}
 
         <div className={`book-status ${getStatusClass(book.status)}`}>
           <span>{getStatusIcon(book.status)}</span>
@@ -147,6 +152,26 @@ const BookComponent = ({ book, onDelete, onUpdate }) => {
       </div>
 
       <div className="book-actions">
+        {onToggleFavorite && (
+          <button
+            onClick={() => onToggleFavorite(book._id)}
+            className={`favorite-btn ${book.is_favorite ? "active" : ""}`}
+            disabled={loading}
+          >
+            {book.is_favorite ? "❤️" : "🤍"} Favoris
+          </button>
+        )}
+
+        {onEdit && (
+          <button
+            onClick={() => onEdit(book)}
+            disabled={loading}
+            className="edit-btn"
+          >
+            ✏️ Modifier
+          </button>
+        )}
+
         {book.status === "à lire" && (
           <button
             onClick={() => handleStatusChange("en cours")}

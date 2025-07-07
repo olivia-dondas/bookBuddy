@@ -34,6 +34,9 @@ app.use("/auth", authRoutes);
 const bookRoutes = require("./routes/bookRoutes");
 app.use("/books", bookRoutes);
 
+const recommendationRoutes = require("./routes/recommendationRoutes");
+app.use("/recommendations", recommendationRoutes);
+
 const rewardRoutes = require("./routes/rewardRoutes");
 app.use("/rewards", rewardRoutes);
 
