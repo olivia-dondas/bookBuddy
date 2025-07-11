@@ -163,12 +163,9 @@ docker run -d -p 27017:27017 --name mongodb mongo
 # Remplacer MONGODB_URI par votre chaîne de connexion Atlas
 ```
 
-3. **Seeder la base de données** (optionnel) :
+3. **Peuplement de la base de données** (optionnel) :
 
-```bash
-cd backend
-node seedRecommendations.js
-```
+Les livres de démonstration sont maintenant ajoutés directement via MongoDB Compass ou le shell MongoDB. Consultez la section "Données de démonstration" plus bas pour les détails.
 
 ---
 
@@ -184,7 +181,6 @@ bookBuddy/
 │   │   ├── middleware/     → Authentification JWT
 │   │   └── app.js          → Point d'entrée serveur Express
 │   ├── uploads/            → Stockage fichiers (covers)
-│   ├── seedRecommendations.js → Script de peuplement DB
 │   ├── package.json
 │   └── .env               → Variables d'environnement
 ├── frontend/

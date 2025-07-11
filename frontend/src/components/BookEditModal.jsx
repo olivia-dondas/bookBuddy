@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./BookEditModal.css";
 
 const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
@@ -9,6 +10,7 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
     cover_url: "",
     category: "",
     pages: "",
+    currentPage: "",
     status: "à lire",
     rating: "",
     comment: "",
@@ -25,6 +27,7 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
         cover_url: book.cover_url || "",
         category: book.category || "",
         pages: book.pages || "",
+        currentPage: book.currentPage || "",
         status: book.status || "à lire",
         rating: book.rating || "",
         comment: book.comment || "",
@@ -49,6 +52,9 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
       const updatedBook = await booksAPI.update(book._id, formData);
       onSave(updatedBook.data);
       onClose();
+
+      // Émettre un événement pour notifier les autres pages
+      bookEventManager.emit(EVENTS.BOOK_UPDATED, updatedBook.data);
 
       // Notification de succès
       const notification = document.createElement("div");
@@ -107,121 +113,172 @@ const BookEditModal = ({ book, isOpen, onClose, onSave }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="edit-form">
-          <div className="form-group">
-            <label htmlFor="title">Titre *</label>
-            <input
-              type="text"
-              id="title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          {/* Section Informations de base */}
+          <div className="form-section">
+            <h3 className="section-title">📖 Informations de base</h3>
 
-          <div className="form-group">
-            <label htmlFor="author">Auteur *</label>
-            <input
-              type="text"
-              id="author"
-              name="author"
-              value={formData.author}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="cover_url">URL de la couverture</label>
-            <input
-              type="url"
-              id="cover_url"
-              name="cover_url"
-              value={formData.cover_url}
-              onChange={handleChange}
-              placeholder="https://example.com/cover.jpg"
-            />
-          </div>
-
-          <div className="form-row">
             <div className="form-group">
-              <label htmlFor="category">Catégorie</label>
+              <label htmlFor="title">Titre *</label>
               <input
                 type="text"
-                id="category"
-                name="category"
-                value={formData.category}
+                id="title"
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
-                placeholder="Roman, Science-fiction, etc."
+                required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="pages">Nombre de pages</label>
+              <label htmlFor="author">Auteur *</label>
               <input
-                type="number"
-                id="pages"
-                name="pages"
-                value={formData.pages}
+                type="text"
+                id="author"
+                name="author"
+                value={formData.author}
                 onChange={handleChange}
-                min="1"
+                required
               />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="cover_url">URL de la couverture</label>
+              <input
+                type="url"
+                id="cover_url"
+                name="cover_url"
+                value={formData.cover_url}
+                onChange={handleChange}
+                placeholder="https://example.com/cover.jpg"
+              />
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="category">Catégorie</label>
+                <input
+                  type="text"
+                  id="category"
+                  name="category"
+                  value={formData.category}
+                  onChange={handleChange}
+                  placeholder="Roman, Science-fiction, etc."
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="pages">Nombre de pages</label>
+                <input
+                  type="number"
+                  id="pages"
+                  name="pages"
+                  value={formData.pages}
+                  onChange={handleChange}
+                  min="1"
+                />
+              </div>
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="status">Statut</label>
-            <select
-              id="status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="à lire">À lire</option>
-              <option value="en cours">En cours</option>
-              <option value="terminé">Terminé</option>
-            </select>
+          {/* Section Lecture */}
+          <div className="form-section">
+            <h3 className="section-title">📚 Progression de lecture</h3>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label htmlFor="currentPage">Page actuelle</label>
+                <input
+                  type="number"
+                  id="currentPage"
+                  name="currentPage"
+                  value={formData.currentPage}
+                  onChange={handleChange}
+                  min="0"
+                  max={formData.pages || undefined}
+                  placeholder="Page où vous en êtes"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="status">Statut</label>
+                <select
+                  id="status"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="à lire">📋 À lire</option>
+                  <option value="en cours">📖 En cours</option>
+                  <option value="terminé">✅ Terminé</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Barre de progression visuelle */}
+            {formData.pages && formData.currentPage && (
+              <div className="progress-preview">
+                <div className="progress-bar">
+                  <div
+                    className="progress-fill"
+                    style={{
+                      width: `${
+                        (formData.currentPage / formData.pages) * 100
+                      }%`,
+                    }}
+                  ></div>
+                </div>
+                <p className="progress-text">
+                  {formData.currentPage} / {formData.pages} pages (
+                  {Math.round((formData.currentPage / formData.pages) * 100)}%)
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="form-group">
-            <label htmlFor="rating">Note (1-5)</label>
-            <select
-              id="rating"
-              name="rating"
-              value={formData.rating}
-              onChange={handleChange}
-            >
-              <option value="">Pas de note</option>
-              <option value="1">1 ⭐</option>
-              <option value="2">2 ⭐</option>
-              <option value="3">3 ⭐</option>
-              <option value="4">4 ⭐</option>
-              <option value="5">5 ⭐</option>
-            </select>
-          </div>
+          {/* Section Évaluation */}
+          <div className="form-section">
+            <h3 className="section-title">⭐ Évaluation et notes</h3>
 
-          <div className="form-group">
-            <label htmlFor="comment">Commentaire</label>
-            <textarea
-              id="comment"
-              name="comment"
-              value={formData.comment}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Votre avis sur ce livre..."
-            />
-          </div>
+            <div className="form-group">
+              <label htmlFor="rating">Note (1-5)</label>
+              <select
+                id="rating"
+                name="rating"
+                value={formData.rating}
+                onChange={handleChange}
+              >
+                <option value="">Pas de note</option>
+                <option value="1">1 ⭐</option>
+                <option value="2">2 ⭐⭐</option>
+                <option value="3">3 ⭐⭐⭐</option>
+                <option value="4">4 ⭐⭐⭐⭐</option>
+                <option value="5">5 ⭐⭐⭐⭐⭐</option>
+              </select>
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="notes">Notes personnelles</label>
-            <textarea
-              id="notes"
-              name="notes"
-              value={formData.notes}
-              onChange={handleChange}
-              rows="4"
-              placeholder="Vos notes personnelles, citations préférées, etc."
-            />
+            <div className="form-group">
+              <label htmlFor="comment">Commentaire</label>
+              <textarea
+                id="comment"
+                name="comment"
+                value={formData.comment}
+                onChange={handleChange}
+                rows="3"
+                placeholder="Votre avis sur ce livre..."
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="notes">Notes personnelles</label>
+              <textarea
+                id="notes"
+                name="notes"
+                value={formData.notes}
+                onChange={handleChange}
+                rows="4"
+                placeholder="Vos notes personnelles, citations préférées, etc."
+              />
+            </div>
           </div>
 
           <div className="form-actions">

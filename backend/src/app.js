@@ -44,7 +44,8 @@ const userRoutes = require("./routes/userRoutes");
 app.use("/users", userRoutes);
 
 // Lancement du serveur
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5055;
 app.listen(PORT, () => {
   console.log(`Serveur lancé sur le port ${PORT}`);
+  console.log(`Mode: ${process.env.NODE_ENV || "development"}`);
 });

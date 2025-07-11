@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { booksAPI } from "../utils/api";
+import imageManager from "../utils/imageManager";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./BookComponent.css";
 
 const BookComponent = ({
@@ -15,19 +17,8 @@ const BookComponent = ({
 
   // Fonction pour déterminer l'URL de la couverture
   const getCoverUrl = () => {
-    if (book.cover_url) {
-      // Si c'est une URL complète (http/https), on l'utilise directement
-      if (book.cover_url.startsWith("http")) {
-        return book.cover_url;
-      }
-      // Si c'est un chemin local, on l'adapte
-      if (book.cover_url.startsWith("/uploads/")) {
-        return `http://localhost:5055${book.cover_url}`;
-      }
-      // Si c'est juste un nom de fichier, on l'utilise depuis le dossier public
-      return `/images/covers/${book.cover_url}`;
-    }
-    return null;
+    // Utiliser imageManager pour une gestion centralisée des images
+    return imageManager.getImageUrl(book.cover_url || book.cover);
   };
 
   const handleDelete = async () => {
@@ -38,6 +29,9 @@ const BookComponent = ({
       try {
         await booksAPI.delete(book._id);
         onDelete(book._id);
+        
+        // Émettre un événement pour notifier les autres pages
+        bookEventManager.emit(EVENTS.BOOK_DELETED, book._id);
       } catch (error) {
         console.error("Erreur lors de la suppression:", error);
         alert("Erreur lors de la suppression du livre");
@@ -52,6 +46,9 @@ const BookComponent = ({
     try {
       const response = await booksAPI.update(book._id, { status: newStatus });
       onUpdate(response.data);
+      
+      // Émettre un événement pour notifier les autres pages
+      bookEventManager.emit(EVENTS.BOOK_UPDATED, response.data);
     } catch (error) {
       console.error("Erreur lors de la mise à jour:", error);
       alert("Erreur lors de la mise à jour du statut");
@@ -130,6 +127,21 @@ const BookComponent = ({
         {book.category && <p className="book-category">{book.category}</p>}
 
         {book.pages && <p className="book-pages">{book.pages} pages</p>}
+
+        {showProgress && book.currentPage && book.pages && (
+          <div className="book-progress">
+            <div className="progress-bar">
+              <div
+                className="progress-fill"
+                style={{ width: `${(book.currentPage / book.pages) * 100}%` }}
+              ></div>
+            </div>
+            <p className="progress-text">
+              {book.currentPage} / {book.pages} pages (
+              {Math.round((book.currentPage / book.pages) * 100)}%)
+            </p>
+          </div>
+        )}
 
         {book.rating && (
           <div className="book-rating">

@@ -197,6 +197,38 @@
   border-color: var(--primary-dark);
 }
 
+.book-progress {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+}
+
+.book-progress .progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.book-progress .progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--primary));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.book-progress .progress-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .book-cover {

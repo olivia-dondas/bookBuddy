@@ -5,6 +5,7 @@ import BookComponent from "../components/BookComponent";
 import AddBookForm from "../components/AddBookForm";
 import BookEditModal from "../components/BookEditModal";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Books.css";
 
 const Books = () => {
@@ -19,20 +20,39 @@ const Books = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [genreFilter, setGenreFilter] = useState("all");
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      fetchBooks();
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        fetchBooks();
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   useEffect(() => {
     filterBooks();
   }, [books, searchTerm, statusFilter, genreFilter]);
+
+  // Écouter les événements de mise à jour des livres
+  useEffect(() => {
+    const unsubscribe = bookEventManager.subscribe(
+      EVENTS.BOOK_UPDATED,
+      (updatedBook) => {
+        // Mettre à jour la liste des livres
+        setBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+      }
+    );
+
+    return unsubscribe;
+  }, []);
 
   const fetchBooks = async () => {
     try {
@@ -79,12 +99,18 @@ const Books = () => {
 
   const handleBookDeleted = (bookId) => {
     setBooks(books.filter((book) => book._id !== bookId));
+    
+    // Émettre un événement pour notifier les autres pages
+    bookEventManager.emit(EVENTS.BOOK_DELETED, bookId);
   };
 
   const handleBookUpdated = (updatedBook) => {
     setBooks(
       books.map((book) => (book._id === updatedBook._id ? updatedBook : book))
     );
+
+    // Émettre un événement pour notifier les autres pages
+    bookEventManager.emit(EVENTS.BOOK_UPDATED, updatedBook);
   };
 
   const handleEditBook = (book) => {
@@ -97,6 +123,9 @@ const Books = () => {
       const response = await booksAPI.toggleFavorite(bookId);
       const updatedBook = response.data.book;
       setBooks(books.map((book) => (book._id === bookId ? updatedBook : book)));
+
+      // Émettre un événement pour notifier les autres pages
+      bookEventManager.emit(EVENTS.BOOK_UPDATED, updatedBook);
 
       // Notification
       const notification = document.createElement("div");
@@ -125,6 +154,15 @@ const Books = () => {
     const genres = books.map((book) => book.category).filter(Boolean);
     return [...new Set(genres)];
   };
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;

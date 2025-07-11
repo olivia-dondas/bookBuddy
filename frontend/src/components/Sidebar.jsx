@@ -43,8 +43,9 @@ const Sidebar = () => {
       {/* Sidebar */}
       <div className={`sidebar ${isOpen ? "sidebar-open" : ""}`}>
         <div className="sidebar-header">
-          <h1 className="sidebar-title">BookBuddy</h1>
-          <div className="sidebar-subtitle">Bibliothèque personnelle</div>
+          <div className="logo-container">
+            <img src="/logo.png" alt="BookBuddy Logo" className="logo-image" />
+          </div>
           <div className="user-info">
             <div className="user-details">
               <span className="user-name">{user?.name || "Utilisateur"}</span>

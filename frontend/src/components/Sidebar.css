@@ -63,20 +63,19 @@
   border-bottom: 1px solid var(--border-dark);
 }
 
-.sidebar-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0 0 0.5rem 0;
-  color: var(--text-white);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+/* Logo container */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
 }
 
-.sidebar-subtitle {
-  font-size: 0.9rem;
-  color: var(--secondary);
-  margin-bottom: 1.5rem;
-  font-weight: 400;
+.logo-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .user-info {

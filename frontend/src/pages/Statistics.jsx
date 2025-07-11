@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Statistics.css";
 
 const Statistics = () => {
@@ -9,16 +10,35 @@ const Statistics = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      fetchBooks();
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        fetchBooks();
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
+
+  // Écouter les événements de mise à jour des livres
+  useEffect(() => {
+    const unsubscribe = bookEventManager.subscribe(
+      EVENTS.BOOK_UPDATED,
+      (updatedBook) => {
+        // Mettre à jour la liste des livres pour recalculer les stats
+        setBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+      }
+    );
+
+    return unsubscribe;
+  }, []);
 
   const fetchBooks = async () => {
     try {
@@ -134,6 +154,15 @@ const Statistics = () => {
   const genreStats = getGenreStats();
   const authorStats = getAuthorStats();
   const ratingStats = getRatingStats();
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;
