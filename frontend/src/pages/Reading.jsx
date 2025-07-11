@@ -2,32 +2,62 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import BookComponent from "../components/BookComponent";
+import BookEditModal from "../components/BookEditModal";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Reading.css";
 
 const Reading = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [editingBook, setEditingBook] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      fetchReadingBooks();
+    // Attendre que l'authentification soit vérifiée
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        fetchReadingBooks();
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
+
+  // Rafraîchir les données toutes les 30 secondes
+  useEffect(() => {
+    if (user && !authLoading) {
+      const interval = setInterval(() => {
+        fetchReadingBooks();
+      }, 30000); // 30 secondes
+
+      return () => clearInterval(interval);
+    }
+  }, [user, authLoading]);
 
   const fetchReadingBooks = async () => {
     try {
       setLoading(true);
       const response = await booksAPI.getAll();
-      const readingBooks = response.data.filter(
-        (book) => book.status === "en_cours"
-      );
+      console.log("Tous les livres récupérés:", response.data);
+
+      const readingBooks = response.data.filter((book) => {
+        // Vérifier plusieurs formats possibles pour "en cours"
+        const status = book.status?.toLowerCase();
+        return (
+          status === "en_cours" ||
+          status === "en cours" ||
+          status === "reading" ||
+          status === "current"
+        );
+      });
+      console.log("Livres en cours de lecture:", readingBooks);
+      console.log("Nombre de livres en cours:", readingBooks.length);
+
       setBooks(readingBooks);
     } catch (err) {
       console.error("Erreur lors du chargement des lectures:", err);
@@ -38,7 +68,14 @@ const Reading = () => {
   };
 
   const handleBookUpdated = (updatedBook) => {
-    if (updatedBook.status === "en_cours") {
+    const status = updatedBook.status?.toLowerCase();
+    const isReading =
+      status === "en_cours" ||
+      status === "en cours" ||
+      status === "reading" ||
+      status === "current";
+
+    if (isReading) {
       setBooks(
         books.map((book) => (book._id === updatedBook._id ? updatedBook : book))
       );
@@ -46,10 +83,34 @@ const Reading = () => {
       // Si le livre n'est plus en cours, le retirer de la liste
       setBooks(books.filter((book) => book._id !== updatedBook._id));
     }
+
+    // Émettre un événement pour notifier les autres pages
+    bookEventManager.emit(EVENTS.BOOK_UPDATED, updatedBook);
   };
 
   const handleBookDeleted = (bookId) => {
     setBooks(books.filter((book) => book._id !== bookId));
+  };
+
+  const handleEditBook = (book) => {
+    setEditingBook(book);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setEditingBook(null);
+    setIsModalOpen(false);
+  };
+
+  const handleSaveBook = (updatedBook) => {
+    setBooks(
+      books.map((book) => (book._id === updatedBook._id ? updatedBook : book))
+    );
+    // Refetch pour s'assurer que les données sont à jour
+    fetchReadingBooks();
+
+    // Émettre un événement pour notifier les autres pages
+    bookEventManager.emit(EVENTS.BOOK_UPDATED, updatedBook);
   };
 
   const getTotalPages = () => {
@@ -65,6 +126,15 @@ const Reading = () => {
     const read = getReadPages();
     return total > 0 ? Math.round((read / total) * 100) : 0;
   };
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;
@@ -91,7 +161,16 @@ const Reading = () => {
                 Suivez l'avancement de vos lectures actuelles
               </p>
             </div>
-            <span className="bento-icon">📚</span>
+            <div className="bento-actions">
+              <button
+                onClick={fetchReadingBooks}
+                className="bento-button bento-button-secondary"
+                disabled={loading}
+              >
+                {loading ? "🔄" : "↻"} Actualiser
+              </button>
+              <span className="bento-icon">📚</span>
+            </div>
           </div>
         </div>
       </div>
@@ -201,12 +280,23 @@ const Reading = () => {
                   book={book}
                   onDelete={handleBookDeleted}
                   onUpdate={handleBookUpdated}
+                  onEdit={handleEditBook}
                   showProgress={true}
                 />
               ))}
             </div>
           </div>
         </div>
+      )}
+
+      {/* Modal d'édition */}
+      {editingBook && (
+        <BookEditModal
+          book={editingBook}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          onSave={handleSaveBook}
+        />
       )}
     </div>
   );

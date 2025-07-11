@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Profile.css";
 
 const Profile = () => {
@@ -16,23 +17,57 @@ const Profile = () => {
     readingGoal: "",
   });
 
-  const { user, logout } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      setProfileData({
-        name: user.name || user.username || "",
-        email: user.email || "",
-        bio: user.bio || "",
-        favoriteGenre: user.favoriteGenre || "",
-        readingGoal: user.readingGoal || "12",
-      });
-      fetchUserBooks();
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        setProfileData({
+          name: user.name || user.username || "",
+          email: user.email || "",
+          bio: user.bio || "",
+          favoriteGenre: user.favoriteGenre || "",
+          readingGoal: user.readingGoal || "12",
+        });
+        fetchUserBooks();
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
+
+  // Écouter les événements de mise à jour des livres
+  useEffect(() => {
+    const unsubscribe = bookEventManager.subscribe(
+      EVENTS.BOOK_UPDATED,
+      (updatedBook) => {
+        console.log('Profile: Livre mis à jour reçu:', updatedBook.title);
+        // Mettre à jour la liste des livres
+        setBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+      }
+    );
+
+    // Aussi écouter les événements de suppression
+    const unsubscribeDeleted = bookEventManager.subscribe(
+      EVENTS.BOOK_DELETED,
+      (deletedBookId) => {
+        console.log('Profile: Livre supprimé reçu:', deletedBookId);
+        setBooks((prevBooks) =>
+          prevBooks.filter((book) => book._id !== deletedBookId)
+        );
+      }
+    );
+
+    return () => {
+      unsubscribe();
+      unsubscribeDeleted();
+    };
+  }, []);
 
   const fetchUserBooks = async () => {
     try {
@@ -69,7 +104,7 @@ const Profile = () => {
   // Statistiques de lecture
   const getReadingStats = () => {
     const currentYear = new Date().getFullYear();
-    const readBooks = books.filter((book) => book.status === "lu");
+    const readBooks = books.filter((book) => book.status === "terminé");
     const readThisYear = readBooks.filter((book) => {
       const readDate = new Date(book.readDate || book.createdAt);
       return readDate.getFullYear() === currentYear;
@@ -84,10 +119,18 @@ const Profile = () => {
       0
     );
 
+    // Calculer les pages lues actuellement (en cours de lecture)
+    const currentlyReading = books.filter((book) => book.status === "en cours");
+    const currentPages = currentlyReading.reduce(
+      (sum, book) => sum + (book.currentPage || 0),
+      0
+    );
+
     const favoriteGenres = {};
     readBooks.forEach((book) => {
-      if (book.genre) {
-        favoriteGenres[book.genre] = (favoriteGenres[book.genre] || 0) + 1;
+      if (book.genre || book.category) {
+        const genre = book.genre || book.category;
+        favoriteGenres[genre] = (favoriteGenres[genre] || 0) + 1;
       }
     });
 
@@ -98,8 +141,8 @@ const Profile = () => {
     return {
       totalBooks: readBooks.length,
       booksThisYear: readThisYear.length,
-      totalPages,
-      pagesThisYear,
+      totalPages: totalPages + currentPages, // Total des pages terminées + pages en cours
+      pagesThisYear: pagesThisYear + currentPages, // Pages cette année + pages en cours
       topGenre,
       readingGoal: parseInt(profileData.readingGoal) || 12,
       goalProgress: Math.min(
@@ -135,8 +178,14 @@ const Profile = () => {
         description: "12 livres en un an",
       });
     }
+    if (stats.totalPages >= 500) {
+      badges.push({ name: "500 pages", description: "500 pages lues" });
+    }
     if (stats.totalPages >= 1000) {
       badges.push({ name: "Mille pages", description: "1000 pages lues" });
+    }
+    if (stats.totalPages >= 5000) {
+      badges.push({ name: "Grand lecteur", description: "5000 pages lues" });
     }
 
     return badges;
@@ -144,6 +193,15 @@ const Profile = () => {
 
   const stats = getReadingStats();
   const badges = getBadges();
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;
@@ -157,6 +215,14 @@ const Profile = () => {
           <p className="bento-subtitle">
             Gérez vos informations personnelles et suivez vos progrès
           </p>
+          <button
+            onClick={fetchUserBooks}
+            className="refresh-button"
+            disabled={loading}
+            title="Actualiser les données"
+          >
+            {loading ? "⏳" : "🔄"}
+          </button>
         </div>
       </div>
 

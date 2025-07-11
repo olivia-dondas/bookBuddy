@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BookComponent from "../components/BookComponent";
 import BookEditModal from "../components/BookEditModal";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Favorites.css";
 
 const Favorites = () => {
@@ -13,16 +14,35 @@ const Favorites = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      fetchFavoriteBooks();
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+      } else {
+        fetchFavoriteBooks();
+      }
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
+
+  // Écouter les événements de mise à jour des livres
+  useEffect(() => {
+    const unsubscribe = bookEventManager.subscribe(
+      EVENTS.BOOK_UPDATED,
+      (updatedBook) => {
+        // Mettre à jour la liste des favoris
+        setFavoriteBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+      }
+    );
+
+    return unsubscribe;
+  }, []);
 
   const fetchFavoriteBooks = async () => {
     try {
@@ -88,6 +108,15 @@ const Favorites = () => {
   const getReadBooks = () => {
     return favoriteBooks.filter((book) => book.status === "lu");
   };
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null;

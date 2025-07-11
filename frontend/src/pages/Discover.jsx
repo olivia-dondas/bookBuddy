@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { booksAPI, recommendationsAPI } from "../utils/api";
+import imageManager from "../utils/imageManager";
 import "./Discover.css";
 
 const Discover = () => {
@@ -14,54 +15,39 @@ const Discover = () => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [addingBooks, setAddingBooks] = useState(new Set());
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Charger les données initiales
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-      return;
+    if (!authLoading) {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      const loadInitialData = async () => {
+        try {
+          setInitialLoading(true);
+
+          // Charger les genres et les recommandations par défaut en parallèle
+          const [genresResponse, recommendationsResponse] = await Promise.all([
+            recommendationsAPI.getGenres(),
+            recommendationsAPI.getAll({ limit: 12, featured: false }),
+          ]);
+
+          setGenres(genresResponse.data.data);
+          setDefaultRecommendations(recommendationsResponse.data.data);
+        } catch (error) {
+          console.error("Erreur lors du chargement des données:", error);
+        } finally {
+          setInitialLoading(false);
+        }
+      };
+
+      loadInitialData();
     }
-
-    const loadInitialData = async () => {
-      try {
-        setInitialLoading(true);
-
-        // Charger les genres et les recommandations par défaut en parallèle
-        const [genresResponse, recommendationsResponse] = await Promise.all([
-          recommendationsAPI.getGenres(),
-          recommendationsAPI.getAll({ limit: 12, featured: false }),
-        ]);
-
-        setGenres(genresResponse.data.data);
-        setDefaultRecommendations(recommendationsResponse.data.data);
-      } catch (error) {
-        console.error("Erreur lors du chargement des données:", error);
-      } finally {
-        setInitialLoading(false);
-      }
-    };
-
-    loadInitialData();
-  }, [user, navigate]);
-
-  // Fonction pour déterminer l'URL de la couverture
-  const getCoverUrl = (book) => {
-    if (book.cover_url) {
-      // Si c'est une URL complète (http/https), on l'utilise directement
-      if (book.cover_url.startsWith("http")) {
-        return book.cover_url;
-      }
-      // Si c'est un chemin local, on l'adapte
-      if (book.cover_url.startsWith("/uploads/")) {
-        return `http://localhost:5055${book.cover_url}`;
-      }
-      // Si c'est juste un nom de fichier, on l'utilise depuis le dossier public
-      return `/images/covers/${book.cover_url}`;
-    }
-    return null;
-  };
+  }, [user, authLoading, navigate]);
 
   // Fonction pour la recherche
   const handleSearch = async () => {
@@ -248,6 +234,15 @@ const Discover = () => {
     }, 100);
   };
 
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
+
   if (!user) {
     navigate("/login");
     return null;
@@ -332,23 +327,14 @@ const Discover = () => {
             {recommendations.map((book) => (
               <div key={book._id} className="book-card">
                 <div className="book-cover-container">
-                  {getCoverUrl(book) ? (
-                    <img
-                      src={getCoverUrl(book)}
-                      alt={`Couverture de ${book.title}`}
-                      className="book-cover"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "flex";
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className="book-cover no-cover"
-                    style={{ display: getCoverUrl(book) ? "none" : "flex" }}
-                  >
-                    📚
-                  </div>
+                  <img
+                    src={imageManager.getImageUrl(book.cover_url || book.cover)}
+                    alt={`Couverture de ${book.title}`}
+                    className="book-cover"
+                    onError={(e) => {
+                      e.target.src = imageManager.getPlaceholderUrl();
+                    }}
+                  />
                 </div>
                 <div className="book-info">
                   <div className="book-header">
@@ -394,23 +380,14 @@ const Discover = () => {
             {defaultRecommendations.map((book) => (
               <div key={book._id} className="book-card">
                 <div className="book-cover-container">
-                  {getCoverUrl(book) ? (
-                    <img
-                      src={getCoverUrl(book)}
-                      alt={`Couverture de ${book.title}`}
-                      className="book-cover"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        e.target.nextSibling.style.display = "flex";
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className="book-cover no-cover"
-                    style={{ display: getCoverUrl(book) ? "none" : "flex" }}
-                  >
-                    📚
-                  </div>
+                  <img
+                    src={imageManager.getImageUrl(book.cover_url || book.cover)}
+                    alt={`Couverture de ${book.title}`}
+                    className="book-cover"
+                    onError={(e) => {
+                      e.target.src = imageManager.getPlaceholderUrl();
+                    }}
+                  />
                 </div>
                 <div className="book-info">
                   <div className="book-header">

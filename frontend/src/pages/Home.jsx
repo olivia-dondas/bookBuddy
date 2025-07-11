@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import BookComponent from "../components/BookComponent";
 import AddBookForm from "../components/AddBookForm";
 import { booksAPI } from "../utils/api";
+import bookEventManager, { EVENTS } from "../utils/bookEventManager";
 import "./Home.css";
 
 const Home = () => {
@@ -12,22 +13,39 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   // Rediriger vers login si non connecté
   useEffect(() => {
-    if (!user) {
+    if (!authLoading && !user) {
       navigate("/login");
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   // Charger les livres au montage du composant
   useEffect(() => {
-    if (user) {
+    if (user && !authLoading) {
       fetchBooks();
     }
-  }, [user]);
+  }, [user, authLoading]);
+
+  // Écouter les événements de mise à jour des livres
+  useEffect(() => {
+    const unsubscribe = bookEventManager.subscribe(
+      EVENTS.BOOK_UPDATED,
+      (updatedBook) => {
+        // Mettre à jour la liste des livres
+        setBooks((prevBooks) =>
+          prevBooks.map((book) =>
+            book._id === updatedBook._id ? updatedBook : book
+          )
+        );
+      }
+    );
+
+    return unsubscribe;
+  }, []);
 
   const fetchBooks = async () => {
     try {
@@ -58,6 +76,15 @@ const Home = () => {
       books.map((book) => (book._id === updatedBook._id ? updatedBook : book))
     );
   };
+
+  if (authLoading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Vérification de l'authentification...</p>
+      </div>
+    );
+  }
 
   if (!user) {
     return null; // Éviter le flash avant redirection

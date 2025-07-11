@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { booksAPI } from "../utils/api";
+import ImageUpload from "./ImageUpload";
 import "./AddBookForm.css";
 
 const AddBookForm = ({ onBookAdded }) => {
@@ -13,6 +14,13 @@ const AddBookForm = ({ onBookAdded }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleImageUpload = (imageFile) => {
+    setFormData({
+      ...formData,
+      cover_url: imageFile ? imageFile.name || imageFile : "",
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,20 +93,11 @@ const AddBookForm = ({ onBookAdded }) => {
         </div>
 
         <div className="form-group">
-          <label htmlFor="cover_url">Image de couverture</label>
-          <input
-            type="text"
-            id="cover_url"
-            name="cover_url"
-            value={formData.cover_url}
-            onChange={handleChange}
-            placeholder="URL ou nom de fichier (ex: dune.jpg)"
-            className="form-input"
+          <label>Image de couverture</label>
+          <ImageUpload
+            onImageUpload={handleImageUpload}
+            currentImage={formData.cover_url}
           />
-          <small className="form-hint">
-            Mettez juste le nom du fichier si l'image est dans
-            /public/images/covers/
-          </small>
         </div>
 
         <div className="form-group">
